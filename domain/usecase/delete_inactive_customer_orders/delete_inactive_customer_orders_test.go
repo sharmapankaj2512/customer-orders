@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestDeleteNoOrderWhenTheCustomerDoesNotExist(t *testing.T) {
+func TestDoNotDeleteOrdersWhenCustomerDoesNotExist(t *testing.T) {
 	customerId := 1233
 	orderRepository := NewOrderRepositoryMock().ExpectFindIsCalled(customerId)
 	reader := NewReaderMock().ExpectReturns(customerId)
@@ -15,6 +15,14 @@ func TestDeleteNoOrderWhenTheCustomerDoesNotExist(t *testing.T) {
 	usecase(reader, writer)
 
 	assertOrderIsNotFound(t, reader, writer, orderRepository)
+}
+
+func TestDoNotDeleteOrdersOfAnActiveCustomer(t *testing.T) {
+	t.Skip("to be implemented")
+}
+
+func TestDeleteOrdersOfAnInActiveCustomer(t *testing.T) {
+	t.Skip("to be implemented")
 }
 
 func assertOrderIsNotFound(
