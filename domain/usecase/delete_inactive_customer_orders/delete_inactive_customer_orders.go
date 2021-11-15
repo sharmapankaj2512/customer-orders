@@ -6,16 +6,16 @@ import (
 	"errors"
 )
 
-func DeleteInActiveCustomerOrders(orderRepository s.OrderRepository) s.Usecase {
+func DeleteInActiveCustomerOrders(customerRepository s.CustomerRepository) s.Usecase {
 	return func(reader s.Reader, writer s.Writer) {
 		customerId := reader.Read().(int)
-		orders := orderRepository.Find(customerId)
-		if no(orders) {
+		customer := customerRepository.Find(customerId)
+		if no(customer) {
 			writer.Write(errors.New("customer not found"))
 		}
 	}
 }
 
-func no(orders []m.Order) bool {
-	return len(orders) == 0
+func no(customer m.Customer) bool {
+	return customer == nil
 }
