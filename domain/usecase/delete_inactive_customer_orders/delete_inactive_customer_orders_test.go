@@ -23,7 +23,7 @@ func assertOrderIsNotFound(
 	writer *WriterMock,
 	orderRepository *OrderRepositoryMock) {
 	reader.AssertExpectations(t)
-	writer.AssertExpectations(t)
 	orderRepository.AssertExpectations(t)
 	orderRepository.AssertNotCalled(t, "Save")
+	writer.AssertExpectations(t)	
 }

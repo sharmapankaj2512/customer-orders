@@ -1,3 +1,9 @@
 package shared
 
-type OrderRepository interface {}
+import (
+	m "customer-orders/domain/model"
+)
+
+type OrderRepository interface {
+	Find(customerId int) []m.Order	
+}
