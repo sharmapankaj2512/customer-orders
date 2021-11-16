@@ -1,4 +1,4 @@
-package deleteinactivecustomerorders
+package removeinactivecustomerorders
 
 import (
 	m "customer-orders/domain/model"
@@ -12,7 +12,7 @@ func TestDoNotDeleteOrdersWhenCustomerDoesNotExist(t *testing.T) {
 	customerRepository := NewCustomerRepositoryMock().ExpectFindDoesNotReturnCustomer(customerId)
 	reader := NewReaderMock().ExpectReturns(customerId)
 	writer := NewWriterMock().ExpectReceivesError("customer not found")
-	usecase := DeleteInActiveCustomerOrders(customerRepository, orderRepository)
+	usecase := RemoveInActiveCustomerOrders(customerRepository, orderRepository)
 
 	usecase(reader, writer)
 
@@ -25,7 +25,7 @@ func TestDoNotDeleteOrdersOfAnActiveCustomer(t *testing.T) {
 	customerRepository := NewCustomerRepositoryMock().ExpectFindReturnsInactiveCustomer(customerId)
 	reader := NewReaderMock().ExpectReturns(customerId)
 	writer := NewWriterMock().ExpectReceivesError("customer is not active")
-	usecase := DeleteInActiveCustomerOrders(customerRepository, orderRepository)
+	usecase := RemoveInActiveCustomerOrders(customerRepository, orderRepository)
 
 	usecase(reader, writer)
 
@@ -42,7 +42,7 @@ func TestDeleteOrdersOfAnInActiveCustomer(t *testing.T) {
 		ExpectDeleteIsCalledWith(orders)
 	reader := NewReaderMock().ExpectReturns(customerId)
 	writer := NewWriterMock().ExpectReceives("orders deleted")
-	usecase := DeleteInActiveCustomerOrders(customerRepository, orderRepository)
+	usecase := RemoveInActiveCustomerOrders(customerRepository, orderRepository)
 
 	usecase(reader, writer)
 

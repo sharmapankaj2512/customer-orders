@@ -1,4 +1,4 @@
-package deleteinactivecustomerorders
+package removeinactivecustomerorders
 
 import (
 	m "customer-orders/domain/model"
@@ -6,7 +6,7 @@ import (
 	"errors"
 )
 
-func DeleteInActiveCustomerOrders(
+func RemoveInActiveCustomerOrders(
 	customerRepository s.CustomerRepository,
 	orderRepository s.OrderRepository) s.Usecase {
 	return func(reader s.Reader, writer s.Writer) {
