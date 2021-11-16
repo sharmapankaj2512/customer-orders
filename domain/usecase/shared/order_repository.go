@@ -5,5 +5,6 @@ import (
 )
 
 type OrderRepository interface {
-	Find(customerId int) []m.Order	
+	Find(customerId int) []m.Order
+	Delete(orders []m.Order)
 }

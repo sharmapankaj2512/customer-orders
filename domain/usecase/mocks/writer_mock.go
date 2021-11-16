@@ -22,3 +22,8 @@ func (m *WriterMock) ExpectReceivesError(message string) *WriterMock {
 	m.On("Write", errors.New(message))
 	return m
 }
+
+func (m *WriterMock) ExpectReceives(message string) *WriterMock {
+	m.On("Write", message)
+	return m
+}

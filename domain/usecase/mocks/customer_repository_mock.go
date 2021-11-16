@@ -28,12 +28,19 @@ func (m *CustomerRepositoryMock) ExpectFindDoesNotReturnCustomer(customerId int)
 }
 
 func (m *CustomerRepositoryMock) ExpectFindReturnsInactiveCustomer(customerId int) *CustomerRepositoryMock {
-	m.On("Find", customerId).Return(&CustomerStub{})
+	m.On("Find", customerId).Return(&CustomerStub{false})
 	return m
 }
 
-type CustomerStub struct {}
+func (m *CustomerRepositoryMock) ExpectFindReturnsActiveCustomer(customerId int) *CustomerRepositoryMock {
+	m.On("Find", customerId).Return(&CustomerStub{true})
+	return m
+}
+
+type CustomerStub struct {
+	active bool
+}
 
 func (s *CustomerStub) IsNotActive() bool {
-	return true
+	return !s.active
 }

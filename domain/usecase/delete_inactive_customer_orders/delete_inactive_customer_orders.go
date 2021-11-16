@@ -6,7 +6,9 @@ import (
 	"errors"
 )
 
-func DeleteInActiveCustomerOrders(customerRepository s.CustomerRepository) s.Usecase {
+func DeleteInActiveCustomerOrders(
+	customerRepository s.CustomerRepository,
+	orderRepository s.OrderRepository) s.Usecase {
 	return func(reader s.Reader, writer s.Writer) {
 		customerId := reader.Read().(int)
 		customer := customerRepository.Find(customerId)
@@ -16,7 +18,11 @@ func DeleteInActiveCustomerOrders(customerRepository s.CustomerRepository) s.Use
 		}
 		if customer.IsNotActive() {
 			writer.Write(errors.New("customer is not active"))
+			return
 		}
+		orders := orderRepository.Find(customerId)
+		orderRepository.Delete(orders)
+		writer.Write("orders deleted")
 	}
 }
 
