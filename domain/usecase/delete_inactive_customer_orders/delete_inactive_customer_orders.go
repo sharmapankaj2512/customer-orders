@@ -11,18 +11,46 @@ func DeleteInActiveCustomerOrders(
 	orderRepository s.OrderRepository) s.Usecase {
 	return func(reader s.Reader, writer s.Writer) {
 		customerId := reader.Read().(int)
+		if output, err := customerPipe(
+			findCustomer(customerRepository, customerId),
+			deleteOrder(orderRepository)); err != nil {
+			writer.Write(err)
+		} else {
+			writer.Write(output)
+		}
+	}
+}
+
+func customerPipe(
+	supplier func() (m.Customer, error),
+	consumer func(m.Customer) interface{}) (interface{}, error) {
+	customer, err := supplier()
+	if err != nil {
+		return err, nil
+	}
+	return consumer(customer), nil
+}
+
+func findCustomer(
+	customerRepository s.CustomerRepository,
+	customerId int) func() (m.Customer, error) {
+	return func() (m.Customer, error) {
 		customer := customerRepository.Find(customerId)
 		if no(customer) {
-			writer.Write(errors.New("customer not found"))
-			return
+			return nil, errors.New("customer not found")
 		}
 		if customer.IsNotActive() {
-			writer.Write(errors.New("customer is not active"))
-			return
+			return nil, errors.New("customer is not active")
 		}
-		orders := orderRepository.Find(customerId)
+		return customer, nil
+	}
+}
+
+func deleteOrder(orderRepository s.OrderRepository) func(customer m.Customer) interface{} {
+	return func(customer m.Customer) interface{} {
+		orders := orderRepository.Find(customer.ID())
 		orderRepository.Delete(orders)
-		writer.Write("orders deleted")
+		return "orders deleted"
 	}
 }
 
