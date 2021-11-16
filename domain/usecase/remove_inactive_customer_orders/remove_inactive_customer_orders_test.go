@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestDoNotDeleteOrdersWhenCustomerDoesNotExist(t *testing.T) {
+func Test_DoNotDeleteOrdersWhenCustomerDoesNotExist(t *testing.T) {
 	customerId := 1233
 	orderRepository := NewOrderRepositoryMock()
 	customerRepository := NewCustomerRepositoryMock().ExpectFindDoesNotReturnCustomer(customerId)
@@ -19,7 +19,7 @@ func TestDoNotDeleteOrdersWhenCustomerDoesNotExist(t *testing.T) {
 	assertOrderIsNotDeleted(t, reader, writer, customerRepository, orderRepository)
 }
 
-func TestDoNotDeleteOrdersOfAnActiveCustomer(t *testing.T) {
+func Test_DoNotDeleteOrdersOfAnActiveCustomer(t *testing.T) {
 	customerId := 4444
 	orderRepository := NewOrderRepositoryMock()
 	customerRepository := NewCustomerRepositoryMock().ExpectFindReturnsInactiveCustomer(customerId)
@@ -32,7 +32,7 @@ func TestDoNotDeleteOrdersOfAnActiveCustomer(t *testing.T) {
 	assertOrderIsNotDeleted(t, reader, writer, customerRepository, orderRepository)
 }
 
-func TestDeleteOrdersOfAnInActiveCustomer(t *testing.T) {
+func Test_DeleteOrdersOfAnInActiveCustomer(t *testing.T) {
 	customerId := 4445
 	orders := []m.Order{OrderStub{}}
 	customerRepository := NewCustomerRepositoryMock().
