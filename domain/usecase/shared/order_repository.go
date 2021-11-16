@@ -6,5 +6,5 @@ import (
 
 type OrderRepository interface {
 	Find(customerId int) []m.Order
-	Delete(orders []m.Order)
+	Delete(order m.Order)
 }

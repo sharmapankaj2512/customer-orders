@@ -19,8 +19,8 @@ func (m *OrderRepositoryMock) Find(customerId int) []Order {
 	return args.Get(0).([]Order)
 }
 
-func (m *OrderRepositoryMock) Delete(orders []Order) {
-	m.Called(orders)	
+func (m *OrderRepositoryMock) Delete(order Order) {
+	m.Called(order)
 }
 
 func (m *OrderRepositoryMock) ExpectFindIsCalled(customerId int) *OrderRepositoryMock {
@@ -34,6 +34,8 @@ func (m *OrderRepositoryMock) ExpectFindReturns(customerId int, orders []Order) 
 }
 
 func (m *OrderRepositoryMock) ExpectOrdersAreDeleted(orders []Order) *OrderRepositoryMock {
-	m.On("Delete", orders).Return(nil)
+	for order := range orders {
+		m.On("Delete", order).Return(nil)
+	}
 	return m
 }

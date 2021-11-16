@@ -41,7 +41,9 @@ func deleteOrder(
 ) func(customer m.Customer) interface{} {
 	return func(customer m.Customer) interface{} {
 		orders := orderRepository.Find(customer.ID())
-		orderRepository.Delete(orders)
+		for order := range orders {
+			orderRepository.Delete(order)
+		}
 		return "orders deleted"
 	}
 }

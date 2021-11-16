@@ -34,7 +34,7 @@ func Test_DoNotDeleteOrdersOfAnActiveCustomer(t *testing.T) {
 
 func Test_DeleteOrdersOfAnInActiveCustomer(t *testing.T) {
 	customerId := 4445
-	orders := []m.Order{OrderStub{}}
+	orders := []m.Order{OrderStub{}, OrderStub{}}
 	customerRepository := NewCustomerRepositoryMock().
 		ExpectReturnsActiveCustomer(customerId)
 	orderRepository := NewOrderRepositoryMock().
