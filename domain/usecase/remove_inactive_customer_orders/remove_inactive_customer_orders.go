@@ -12,11 +12,10 @@ func RemoveInActiveCustomerOrders(
 ) s.Usecase {
 	return func(reader s.Reader, writer s.Writer) {
 		customerId := reader.Read().(int)
-		supplier := s.CustomerPipe(
+		s.IOPipe(s.CustomerPipe(
 			findCustomer(customerRepository, customerId),
-			deleteOrder(orderRepository))
-		consumer := writer.Write
-		s.IoPipe(supplier, consumer)
+			deleteOrder(orderRepository)),
+			writer.Write)
 	}
 }
 

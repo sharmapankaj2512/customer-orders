@@ -17,7 +17,7 @@ func CustomerPipe(
 	}
 }
 
-func IoPipe(
+func IOPipe(
 	supplier func() (interface{}, error),
 	consumer func(interface{})) {
 	if output, err := supplier(); err != nil {
