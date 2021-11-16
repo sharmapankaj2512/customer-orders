@@ -8,32 +8,45 @@ import (
 
 func RemoveInActiveCustomerOrders(
 	customerRepository s.CustomerRepository,
-	orderRepository s.OrderRepository) s.Usecase {
+	orderRepository s.OrderRepository,
+) s.Usecase {
 	return func(reader s.Reader, writer s.Writer) {
 		customerId := reader.Read().(int)
-		if output, err := customerPipe(
+		supplier := customerPipe(
 			findCustomer(customerRepository, customerId),
-			deleteOrder(orderRepository)); err != nil {
-			writer.Write(err)
-		} else {
-			writer.Write(output)
-		}
+			deleteOrder(orderRepository))
+		consumer := writer.Write
+		ioPipe(supplier, consumer)
+	}
+}
+
+func ioPipe(
+	supplier func() (interface{}, error),
+	consumer func(interface{})) {
+	if output, err := supplier(); err != nil {
+		consumer(err)
+	} else {
+		consumer(output)
 	}
 }
 
 func customerPipe(
 	supplier func() (m.Customer, error),
-	consumer func(m.Customer) interface{}) (interface{}, error) {
-	customer, err := supplier()
-	if err != nil {
-		return err, nil
+	consumer func(m.Customer) interface{},
+) func() (interface{}, error) {
+	return func() (interface{}, error) {
+		customer, err := supplier()
+		if err != nil {
+			return err, nil
+		}
+		return consumer(customer), nil
 	}
-	return consumer(customer), nil
 }
 
 func findCustomer(
 	customerRepository s.CustomerRepository,
-	customerId int) func() (m.Customer, error) {
+	customerId int,
+) func() (m.Customer, error) {
 	return func() (m.Customer, error) {
 		customer := customerRepository.Find(customerId)
 		if no(customer) {
@@ -46,7 +59,9 @@ func findCustomer(
 	}
 }
 
-func deleteOrder(orderRepository s.OrderRepository) func(customer m.Customer) interface{} {
+func deleteOrder(
+	orderRepository s.OrderRepository,
+) func(customer m.Customer) interface{} {
 	return func(customer m.Customer) interface{} {
 		orders := orderRepository.Find(customer.ID())
 		orderRepository.Delete(orders)
