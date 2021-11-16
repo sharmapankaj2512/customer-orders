@@ -20,16 +20,6 @@ func RemoveInActiveCustomerOrders(
 	}
 }
 
-func ioPipe(
-	supplier func() (interface{}, error),
-	consumer func(interface{})) {
-	if output, err := supplier(); err != nil {
-		consumer(err)
-	} else {
-		consumer(output)
-	}
-}
-
 func customerPipe(
 	supplier func() (m.Customer, error),
 	consumer func(m.Customer) interface{},
@@ -40,6 +30,16 @@ func customerPipe(
 			return err, nil
 		}
 		return consumer(customer), nil
+	}
+}
+
+func ioPipe(
+	supplier func() (interface{}, error),
+	consumer func(interface{})) {
+	if output, err := supplier(); err != nil {
+		consumer(err)
+	} else {
+		consumer(output)
 	}
 }
 
