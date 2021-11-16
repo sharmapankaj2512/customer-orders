@@ -33,7 +33,7 @@ func (m *OrderRepositoryMock) ExpectFindReturns(customerId int, orders []Order) 
 	return m
 }
 
-func (m *OrderRepositoryMock) ExpectDeleteIsCalledWith(orders []Order) *OrderRepositoryMock {
+func (m *OrderRepositoryMock) ExpectOrdersAreDeleted(orders []Order) *OrderRepositoryMock {
 	m.On("Delete", orders).Return(nil)
 	return m
 }
