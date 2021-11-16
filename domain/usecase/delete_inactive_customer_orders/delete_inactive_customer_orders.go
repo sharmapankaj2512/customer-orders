@@ -12,6 +12,10 @@ func DeleteInActiveCustomerOrders(customerRepository s.CustomerRepository) s.Use
 		customer := customerRepository.Find(customerId)
 		if no(customer) {
 			writer.Write(errors.New("customer not found"))
+			return
+		}
+		if customer.IsNotActive() {
+			writer.Write(errors.New("customer is not active"))
 		}
 	}
 }

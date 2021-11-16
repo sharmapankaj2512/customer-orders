@@ -1,3 +1,5 @@
 package model
 
-type Customer interface{}
+type Customer interface{
+	IsNotActive() bool
+}
